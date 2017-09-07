@@ -17,10 +17,16 @@ If our web page want to make a request to server B (say, `GET http://api.bar.com
 ### Usage
 
 ```bash
-node ./src/cors-proxy.js 8090 api.bar.com 80
+node ./src/cors-proxy.js 9090 www.foo.com 8080 api.bar.com 80
 ```
 
-where the `8090` is the listening port of the proxy, and `api.bar.com` is the destination server, and `80` is the destination port. Ever HTTP request to the `8090` port of the proxy host will be redirected to the `api.bar.com:80`.
+- `9090` is the listening port of the proxy
+- `www.foo.com` is the source host
+- `8080` is the source port
+- `api.bar.com` is the destination host
+- `80` is the destination port.
+
+Ever HTTP request from `http://www.foo.com:8080` to `http://localhost:9090` will be redirect to `htpp://api.bar.com:80`.
 
 Currently only the HTTP protocol is supported. The HTTPS protocol may be supported in the future.
 

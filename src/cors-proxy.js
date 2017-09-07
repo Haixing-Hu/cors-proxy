@@ -14,33 +14,43 @@ const request = require('request');
 
 program
   .version('0.1.0')
-  .usage('<listening-port> <remote-server> <remote-port>')
+  .usage('<listening-port> <source-host> <source-port> <destination-host> <destination-port>')
   .parse(process.argv)
 
 program.parse(process.argv)
 
-if (program.args.length !== 3) {
+if (program.args.length !== 5) {
   program.help()
 }
 
 const port = parseInt(program.args[0])
-const remoteHost = program.args[1]
-const remotePort = parseInt(program.args[2])
-const remoteProtocol = 'http'
-const remoteServer = remoteProtocol + '://' + remoteHost + ':' + remotePort
+const srcHost = program.args[1]
+const srcPort = parseInt(program.args[2])
+const destHost = program.args[3]
+const destPort = parseInt(program.args[4])
+const srcProtocol = 'http'
+const destProtocol = 'http'
+const srcServer = srcProtocol + '://' + srcHost + ':' + srcPort
+const destServer = destProtocol + '://' + destHost + ':' + destPort
 
-if (isNaN(port) || isNaN(remotePort)) {
+if (isNaN(port) || isNaN(srcPort) || isNaN(destPort)) {
   program.help()
 }
 
-console.log('Redirect all HTTP requests to ' + remoteServer)
+console.log('Proxy all HTTP requests from ' + srcServer + ' to ' + destServer)
 
 const app = express()
 
 app.use('/', function(req, res) {
-  var url = remoteServer + req.url
+  var url = destServer + req.url
   console.log(req.method + ' ' + req.url + ' => '+ req.method + ' ' + url)
-  req.pipe(request(url)).pipe(res)
+  req.pipe(request(url)).on('response', function (res) {
+    // add the Access-Control-Allow-Origin header to support CORS
+    res.headers['access-control-allow-origin'] = srcServer
+    res.headers['access-control-allow-credentials'] = true
+    res.headers['access-control-allow-methods'] = 'GET, POST, PUT, DELETE, HEAD'
+    res.headers['access-control-allow-headers'] = 'Content-Type, *'
+  }).pipe(res)
 })
 
 app.listen(port);
