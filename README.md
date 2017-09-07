@@ -23,3 +23,8 @@ node ./src/cors-proxy.js 8090 api.bar.com 80
 where the `8090` is the listening port of the proxy, and `api.bar.com` is the destination server, and `80` is the destination port. Ever HTTP request to the `8090` port of the proxy host will be redirected to the `api.bar.com:80`.
 
 Currently only the HTTP protocol is supported. The HTTPS protocol may be supported in the future.
+
+### References
+
+* [The complete CORS reference](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
+* [IE’s XDomainRequest limitations](https://blogs.msdn.microsoft.com/ieinternals/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds/)

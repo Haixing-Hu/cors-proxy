@@ -33,13 +33,14 @@ if (isNaN(port) || isNaN(remotePort)) {
   program.help()
 }
 
-console.log('Redirects HTTP requests to http://localhost:' + port + ' to ' + remoteServer)
+console.log('Redirect all HTTP requests to ' + remoteServer)
 
-const app = express();
+const app = express()
 
 app.use('/', function(req, res) {
-  var url = remoteServer + req.url;
-  req.pipe(request(url)).pipe(res);
-});
+  var url = remoteServer + req.url
+  console.log(req.method + ' ' + req.url + ' => '+ req.method + ' ' + url)
+  req.pipe(request(url)).pipe(res)
+})
 
 app.listen(port);
