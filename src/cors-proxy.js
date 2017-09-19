@@ -30,7 +30,7 @@ const destHost = program.args[3]
 const destPort = parseInt(program.args[4])
 const srcProtocol = 'http'
 const destProtocol = 'http'
-const srcServer = srcProtocol + '://' + srcHost + ':' + srcPort
+const srcServer = srcProtocol + '://' + srcHost + (srcPort === 80 ? '' : ':' + srcPort)
 const destServer = destProtocol + '://' + destHost + ':' + destPort
 
 if (isNaN(port) || isNaN(srcPort) || isNaN(destPort)) {
