@@ -44,16 +44,19 @@ const app = express()
 app.use('/', function(req, res) {
   var url = destServer + req.url
   console.log(req.method + ' ' + req.url + ' => '+ req.method + ' ' + url)
-  try {
-    req.pipe(request(url)).on('response', function (res) {
-      // add the Access-Control-Allow-Origin header to support CORS
-      res.headers['access-control-allow-origin'] = srcServer
-      res.headers['access-control-allow-credentials'] = true
-      res.headers['access-control-allow-methods'] = 'GET, POST, PUT, DELETE, HEAD'
-      res.headers['access-control-allow-headers'] = 'Content-Type, *'
-    }).pipe(res)
-  } catch (e) {
-    console.log('ERROR: ' + e)
+  while (true) {
+    try {
+      req.pipe(request(url)).on('response', function (res) {
+        // add the Access-Control-Allow-Origin header to support CORS
+        res.headers['access-control-allow-origin'] = srcServer
+        res.headers['access-control-allow-credentials'] = true
+        res.headers['access-control-allow-methods'] = 'GET, POST, PUT, DELETE, HEAD'
+        res.headers['access-control-allow-headers'] = 'Content-Type, *'
+      }).pipe(res)
+    } catch (e) {
+      console.log('ERROR: ' + e)
+      console.log('Restart the proxy again.')
+    }
   }
 })
 
